@@ -21,7 +21,7 @@ describe('PropertyListing', () => {
         // Add more mock data objects as needed
     ];
 
-    it('should render the property listing correctly', () => {
+    it('should render property cards for each item in the data array', () => {
         render(
             <AppContext.Provider value={{ data: mockData }}>
                 <PropertyListing />
@@ -44,7 +44,7 @@ describe('PropertyListing', () => {
         });
     });
 
-    it('should not render the property listing if data is null', () => {
+    it('should not render property cards if data is null', () => {
         render(
             <AppContext.Provider value={{ data: null }}>
                 <PropertyListing />

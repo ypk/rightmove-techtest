@@ -26,7 +26,7 @@ const PropertyDetails = ({ propertyTitle, displayAddress, branchName, url, summa
                     <span role="img" aria-label="Email icon">
                         ✉️
                     </span>
-                    Contact {branchName}
+                    <p>Contact {branchName}</p>
                 </a>
             </div>
         </div>

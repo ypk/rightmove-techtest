@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from 'react';
-import './App.scss';
 import Header from '../Header';
 import SortAndFilter from '../SortAndFilter';
 import PropertyListing from '../PropertyListing';
 import { AppContext } from "../../AppContext";
-import ErrorBoundary from '../../ErrorBoundary';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import './App.scss';
 
 const App = () => {
     const { setData } = useContext(AppContext);

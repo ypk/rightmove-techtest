@@ -1,4 +1,5 @@
 import React from 'react';
+import "./NoPropertyAvailable.scss";
 
 const NoPropertyAvailable = () => {
     return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import './SortAndFilter.scss';
 
-const SortAndFilter = () => {
+const SortAndFilter = ({ onFilterChange }) => {
     return (
         <div className="SortAndFilter">
             {/*

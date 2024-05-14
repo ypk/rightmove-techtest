@@ -1,25 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './MultiSelect.scss';
 
 const MultiSelect = ({ options, onChange, label }) => {
-    const didMount = useRef(false);
-
     const [selectedOptions, setSelectedOptions] = useState({});
 
-    useEffect(() => {
-        if (didMount.current) {
-            onChange(Object.keys(selectedOptions).filter((key) => selectedOptions[key] === true));
-        } else {
-            didMount.current = true;
-        }
-    }, [selectedOptions, onChange]);
-
     const handleOnChange = (e) => {
-        setSelectedOptions({
-            ...selectedOptions,
-            [e.target.value]: e.target.checked,
-        });
+        const option = e.target.value;
+        const isChecked = e.target.checked;
+        const updatedOptions = { ...selectedOptions, [option]: isChecked };
+        setSelectedOptions(updatedOptions);
+
+        const selectedValues = Object.keys(updatedOptions).filter(key => updatedOptions[key]);
+        onChange(selectedValues);
     };
 
     return (

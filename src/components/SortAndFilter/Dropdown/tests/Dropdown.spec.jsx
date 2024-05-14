@@ -1,30 +1,46 @@
 import React from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import Dropdown from '../Dropdown';
-import { render, screen } from '@testing-library/react';
-import { within } from '@testing-library/dom';
-import userEvent from '@testing-library/user-event';
+import { sortOptions, orderOptions } from '../../../../constants';
 
 describe('Dropdown', () => {
-    it('should render three options options and a label', () => {
-        render(<Dropdown options={[0, 100, 200]} label="test label" />);
-        const select = screen.getByRole('combobox');
-        const options = within(select).getAllByRole('option');
-        expect(options).toHaveLength(3);
+    let onChangeMock;
 
-        const label = screen.getByText('test label');
-        expect(label).toBeInTheDocument();
+    beforeEach(() => {
+        onChangeMock = jest.fn();
     });
 
-    it('should correctly update the value', async () => {
-        const onChange = () => {};
-        render(<Dropdown options={[0, 100, 200]} label="test label" onChange={onChange} />);
+    test('renders the label correctly', () => {
+        const label = 'Sort By';
+        render(<Dropdown options={sortOptions} onChange={onChangeMock} label={label} />);
+        const labelElement = screen.getByText(label);
+        expect(labelElement).toBeInTheDocument();
+    });
 
-        const select = screen.getByRole('combobox');
+    test('renders sortOptions correctly', () => {
+        render(<Dropdown options={sortOptions} onChange={onChangeMock} label="Sort By" />);
+        const options = screen.getAllByRole('option');
+        expect(options).toHaveLength(sortOptions.length);
+        sortOptions.forEach((option, index) => {
+            expect(options[index]).toHaveAttribute('value', option);
+            expect(options[index]).toHaveTextContent(option);
+        });
+    });
 
-        await userEvent.selectOptions(select, ['200']);
+    test('renders orderOptions correctly', () => {
+        render(<Dropdown options={orderOptions} onChange={onChangeMock} label="Order" />);
+        const options = screen.getAllByRole('option');
+        expect(options).toHaveLength(orderOptions.length);
+        orderOptions.forEach((option, index) => {
+            expect(options[index]).toHaveAttribute('value', option);
+            expect(options[index]).toHaveTextContent(option);
+        });
+    });
 
-        expect(screen.getByRole('option', { name: '0' }).selected).toBe(false);
-        expect(screen.getByRole('option', { name: '100' }).selected).toBe(false);
-        expect(screen.getByRole('option', { name: '200' }).selected).toBe(true);
+    test('calls onChange with correct selected option', () => {
+        render(<Dropdown options={sortOptions} onChange={onChangeMock} label="Sort By" />);
+        const selectElement = screen.getByRole('combobox');
+        fireEvent.change(selectElement, { target: { value: sortOptions[1] } });
+        expect(onChangeMock).toHaveBeenCalledWith(sortOptions[1]);
     });
 });

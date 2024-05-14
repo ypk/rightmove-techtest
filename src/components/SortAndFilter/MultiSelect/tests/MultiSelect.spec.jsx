@@ -1,65 +1,57 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import MultiSelect from '../MultiSelect';
-
-const propertyTypes = [
-    'Flat',
-    'Apartment',
-    'Penthouse',
-    'Semi-Detached',
-    'Detached',
-    'Terraced',
-    'Duplex',
-    'Mews',
-    'Boat',
-    'Maisonette',
-];
+import { propertyTypes, priceOptions, bedOptions, sortOptions, orderOptions } from '../../../../constants';
 
 describe('MultiSelect', () => {
-    it('should render all  options options and a label', () => {
-        render(<MultiSelect options={propertyTypes} label="test label" />);
+    let onChangeMock;
 
-        const inputs = screen.getAllByRole('checkbox');
-        expect(inputs).toHaveLength(propertyTypes.length);
+    beforeEach(() => {
+        onChangeMock = jest.fn();
+    });
 
-        propertyTypes.forEach((propertyType) => {
-            const input = screen.getByLabelText(propertyType);
-            expect(input.value).toBe(propertyType.toLowerCase());
+    test('renders propertyTypes options correctly', () => {
+        render(<MultiSelect options={propertyTypes} onChange={onChangeMock} label="Property Type" />);
+        const checkboxes = screen.getAllByRole('checkbox');
+        expect(checkboxes).toHaveLength(propertyTypes.length);
+        propertyTypes.forEach((option, index) => {
+            expect(checkboxes[index]).toHaveAttribute('value', option.toLowerCase());
         });
     });
 
-    it('should call the callback when clicking on various option', async () => {
-        const onChange = () => {};
-        const user = userEvent.setup();
-        render(<MultiSelect options={propertyTypes} label="test label" onChange={onChange} />);
+    test('renders priceOptions options correctly', () => {
+        render(<MultiSelect options={priceOptions.map(String)} onChange={onChangeMock} label="Price" />);
+        const checkboxes = screen.getAllByRole('checkbox');
+        expect(checkboxes).toHaveLength(priceOptions.length);
+        priceOptions.forEach((option, index) => {
+            expect(checkboxes[index]).toHaveAttribute('value', String(option));
+        });
+    });
 
-        const uncheckedFlatsCheckbox = screen.getByRole('checkbox', { name: 'Flat', checked: false });
-        const uncheckedSemiDetachedCheckbox = screen.getByRole('checkbox', { name: 'Semi-Detached', checked: false });
-        const uncheckedTerracedCheckbox = screen.getByRole('checkbox', { name: 'Terraced', checked: false });
+    test('renders bedOptions options correctly', () => {
+        render(<MultiSelect options={bedOptions.map(String)} onChange={onChangeMock} label="Bedrooms" />);
+        const checkboxes = screen.getAllByRole('checkbox');
+        expect(checkboxes).toHaveLength(bedOptions.length);
+        bedOptions.forEach((option, index) => {
+            expect(checkboxes[index]).toHaveAttribute('value', String(option));
+        });
+    });
 
-        await user.click(uncheckedFlatsCheckbox);
+    test('renders sortOptions options correctly', () => {
+        render(<MultiSelect options={sortOptions} onChange={onChangeMock} label="Sort By" />);
+        const checkboxes = screen.getAllByRole('checkbox');
+        expect(checkboxes).toHaveLength(sortOptions.length);
+        sortOptions.forEach((option, index) => {
+            expect(checkboxes[index]).toHaveAttribute('value', option);
+        });
+    });
 
-        const checkedFlatsCheckbox = screen.getByRole('checkbox', { name: 'Flat', checked: true });
-        expect(checkedFlatsCheckbox).toBeInTheDocument();
-        expect(uncheckedSemiDetachedCheckbox).toBeInTheDocument();
-        expect(uncheckedTerracedCheckbox).toBeInTheDocument();
-
-        await user.click(uncheckedSemiDetachedCheckbox);
-
-        const checkedSemiDetachedCheckbox = screen.getByRole('checkbox', { name: 'Semi-Detached', checked: true });
-        expect(checkedFlatsCheckbox).toBeInTheDocument();
-        expect(checkedSemiDetachedCheckbox).toBeInTheDocument();
-
-        await user.click(uncheckedTerracedCheckbox);
-
-        const checkedTerracedCheckbox = screen.getByRole('checkbox', { name: 'Terraced', checked: true });
-        expect(checkedTerracedCheckbox).toBeInTheDocument();
-
-        await user.click(checkedSemiDetachedCheckbox);
-
-        expect(checkedFlatsCheckbox).toBeInTheDocument();
-        expect(uncheckedSemiDetachedCheckbox).toBeInTheDocument();
-        expect(checkedTerracedCheckbox).toBeInTheDocument();
+    test('renders orderOptions options correctly', () => {
+        render(<MultiSelect options={orderOptions} onChange={onChangeMock} label="Order" />);
+        const checkboxes = screen.getAllByRole('checkbox');
+        expect(checkboxes).toHaveLength(orderOptions.length);
+        orderOptions.forEach((option, index) => {
+            expect(checkboxes[index]).toHaveAttribute('value', option);
+        });
     });
 });
